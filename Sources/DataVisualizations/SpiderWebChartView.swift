@@ -3,7 +3,7 @@ import SwiftUI
 public struct SpiderWebChartView: View {
     let data: [Double] // Normalized data (0.0 to 1.0)
     let categories: [String] // Labels for each axis
-    let divisions: Int = 4 // Number of concentric circles
+    let divisions: Int // Number of concentric circles
 
     public init(data: [Double], categories: [String], divisions: Int = 4) {
         self.data = data
