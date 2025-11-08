@@ -1,26 +1,39 @@
 import SwiftUI
 
 public struct SpiderWebChartView: View {
-    let data: [Double] // Normalized data (0.0 to 1.0)
-    let categories: [String] // Labels for each axis
-    let divisions: Int // Number of concentric circles
+    let data: [Double]
+    let categories: [String]
+    let divisions: Int
+    let gridColor: Color
+    let plotFillColor: Color
+    let plotStrokeColor: Color
 
-    public init(data: [Double], categories: [String], divisions: Int = 4) {
+    public init(
+        data: [Double],
+        categories: [String],
+        divisions: Int = 4,
+        gridColor: Color = .gray,
+        plotFillColor: Color = .blue,
+        plotStrokeColor: Color = .blue
+    ) {
         self.data = data
         self.categories = categories
         self.divisions = divisions
+        self.gridColor = gridColor
+        self.plotFillColor = plotFillColor
+        self.plotStrokeColor = plotStrokeColor
     }
 
     public var body: some View {
         ZStack {
             // Draw the grid
             RadarChartGrid(numberOfCategories: categories.count, divisions: divisions)
-                .stroke(Color.gray.opacity(0.5), lineWidth: 1)
+                .stroke(gridColor.opacity(0.5), lineWidth: 1)
 
             // Draw the data plot
-            RadarChartDataPlot(data: data, numberOfCategories: categories.count)
-                .fill(Color.blue.opacity(0.6))
-                .stroke(Color.blue, lineWidth: 2)
+            let plot = RadarChartDataPlot(data: data, numberOfCategories: categories.count)
+            plot.fill(plotFillColor.opacity(0.6))
+                .overlay(plot.stroke(plotStrokeColor, lineWidth: 2))
 
             // Add category labels (optional, but good for clarity)
             ForEach(0..<categories.count, id: \.self) { index in
