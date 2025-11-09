@@ -1,11 +1,12 @@
 import SwiftUI
 
-public struct SpiderWebChartView: View {
+public struct SpiderWebChartView<Label: View>: View {
     let data: [SpiderChartDataPoint]
     let divisions: Int
     let gridColor: Color
     let plotFillColor: Color
     let plotStrokeColor: Color
+    let labelContent: (String, Int) -> Label
 
     // Computed properties
     private var categories: [String] {
@@ -20,13 +21,15 @@ public struct SpiderWebChartView: View {
         divisions: Int = 4,
         gridColor: Color = .gray,
         plotFillColor: Color = .blue,
-        plotStrokeColor: Color = .blue
+        plotStrokeColor: Color = .blue,
+        @ViewBuilder labelContent: @escaping (String, Int) -> Label
     ) {
         self.data = data
         self.divisions = divisions
         self.gridColor = gridColor
         self.plotFillColor = plotFillColor
         self.plotStrokeColor = plotStrokeColor
+        self.labelContent = labelContent
     }
 
     public var body: some View {
@@ -40,10 +43,9 @@ public struct SpiderWebChartView: View {
             plot.fill(plotFillColor.opacity(0.6))
                 .overlay(plot.stroke(plotStrokeColor, lineWidth: 2))
 
-            // Add category labels (optional, but good for clarity)
+            // Add custom labels
             ForEach(categories.indices, id: \.self) { index in
-                Text(categories[index])
-                    .font(.caption)
+                labelContent(categories[index], index)
                     .offset(labelOffset(for: index))
             }
         }
@@ -62,6 +64,28 @@ public struct SpiderWebChartView: View {
     }
 }
 
+// Extension for default Text label
+public extension SpiderWebChartView where Label == Text {
+    init(
+        data: [SpiderChartDataPoint],
+        divisions: Int = 4,
+        gridColor: Color = .gray,
+        plotFillColor: Color = .blue,
+        plotStrokeColor: Color = .blue
+    ) {
+        self.init(
+            data: data,
+            divisions: divisions,
+            gridColor: gridColor,
+            plotFillColor: plotFillColor,
+            plotStrokeColor: plotStrokeColor
+        ) { category, _ in
+            Text(category)
+                .font(.caption)
+        }
+    }
+}
+
 // Example Usage in a ContentView
 #Preview {
     let sampleData: [SpiderChartDataPoint] = [
@@ -72,5 +96,13 @@ public struct SpiderWebChartView: View {
         .init(category: "Flexibility", value: 0.7)
     ]
 
+    // Example with default labels
     return SpiderWebChartView(data: sampleData)
+    
+    // Example with custom labels
+//    SpiderWebChartView(data: sampleData) { category, index in
+//        Text(category)
+//            .font(.headline)
+//            .foregroundColor(.red)
+//    }
 }
