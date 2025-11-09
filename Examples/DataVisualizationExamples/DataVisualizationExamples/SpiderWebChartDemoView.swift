@@ -26,6 +26,13 @@ struct SpiderWebChartDemoView: View {
     @State private var plotFillColor: Color = .blue
     @State private var plotStrokeColor: Color = .blue
     @State private var isDarkMode = false
+    @State private var labelStyle: LabelStyle = .default
+
+    enum LabelStyle: String, CaseIterable, Identifiable {
+        case `default`
+        case custom
+        var id: String { self.rawValue }
+    }
 
     // Computed property to convert demo data to package data structure
     private var spiderChartDataPoints: [SpiderChartDataPoint] {
@@ -37,12 +44,7 @@ struct SpiderWebChartDemoView: View {
             // --- Static Chart View ---
             HStack {
                 Spacer()
-                SpiderWebChartView(
-                    data: spiderChartDataPoints,
-                    gridColor: gridColor,
-                    plotFillColor: plotFillColor,
-                    plotStrokeColor: plotStrokeColor
-                )
+                chartView
                 Spacer()
             }
             .padding()
@@ -52,6 +54,13 @@ struct SpiderWebChartDemoView: View {
             Form {
                 Section(header: Text("Appearance")) {
                     Toggle("Enable Dark Mode", isOn: $isDarkMode)
+                    
+                    Picker("Label Style", selection: $labelStyle) {
+                        ForEach(LabelStyle.allCases) { style in
+                            Text(style.rawValue.capitalized).tag(style)
+                        }
+                    }
+                    
                     ColorPicker("Grid Color", selection: $gridColor)
                     ColorPicker("Fill Color", selection: $plotFillColor)
                     ColorPicker("Stroke Color", selection: $plotStrokeColor)
@@ -77,6 +86,30 @@ struct SpiderWebChartDemoView: View {
         .navigationBarTitleDisplayMode(.inline)
         .background(Color(UIColor.systemGroupedBackground))
         .environment(\.colorScheme, isDarkMode ? .dark : .light)
+    }
+
+    @ViewBuilder
+    private var chartView: some View {
+        switch labelStyle {
+        case .default:
+            SpiderWebChartView(
+                data: spiderChartDataPoints,
+                gridColor: gridColor,
+                plotFillColor: plotFillColor,
+                plotStrokeColor: plotStrokeColor
+            )
+        case .custom:
+            SpiderWebChartView(
+                data: spiderChartDataPoints,
+                gridColor: gridColor,
+                plotFillColor: plotFillColor,
+                plotStrokeColor: plotStrokeColor
+            ) { category, _ in
+                Text(category)
+                    .font(.system(size: 10, weight: .bold, design: .monospaced))
+                    .foregroundColor(.purple)
+            }
+        }
     }
     
     private func addAxis() {
