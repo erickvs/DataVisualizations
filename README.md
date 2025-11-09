@@ -2,6 +2,15 @@
 
 A Swift Package for creating beautiful, reusable, and customizable data visualizations in SwiftUI.
 
+## Project Organization
+
+This repository is a monorepo that contains both the `DataVisualizations` Swift Package and an example application to demonstrate its features.
+
+- **`/Sources`**: Contains the source code for the Swift Package.
+- **`/Examples`**: Contains the `DataVisualizationsExample` Xcode project which you can run to see the components in action.
+
+To work on the package and see your changes live, open the `DataVisualizations.xcworkspace` file at the root of the repository.
+
 ## Features
 
 - **SpiderWebChartView**: A highly customizable spider web (or radar) chart.
