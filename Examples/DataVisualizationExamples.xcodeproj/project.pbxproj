@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A79128662EC1502F00009717 /* DataVisualizations in Frameworks */ = {isa = PBXBuildFile; productRef = A79128652EC1502F00009717 /* DataVisualizations */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A7F55DC42EC14C8F00B9A343 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -35,16 +39,6 @@
 			path = DataVisualizationExamples;
 			sourceTree = "<group>";
 		};
-		A7F55DC62EC14C8F00B9A343 /* DataVisualizationExamplesTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DataVisualizationExamplesTests;
-			sourceTree = "<group>";
-		};
-		A7F55DD02EC14C8F00B9A343 /* DataVisualizationExamplesUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = DataVisualizationExamplesUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A79128662EC1502F00009717 /* DataVisualizations in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +71,6 @@
 			isa = PBXGroup;
 			children = (
 				A7F55DB82EC14C8E00B9A343 /* DataVisualizationExamples */,
-				A7F55DC62EC14C8F00B9A343 /* DataVisualizationExamplesTests */,
-				A7F55DD02EC14C8F00B9A343 /* DataVisualizationExamplesUITests */,
 				A7F55DB72EC14C8E00B9A343 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -112,6 +105,7 @@
 			);
 			name = DataVisualizationExamples;
 			packageProductDependencies = (
+				A79128652EC1502F00009717 /* DataVisualizations */,
 			);
 			productName = DataVisualizationExamples;
 			productReference = A7F55DB62EC14C8E00B9A343 /* DataVisualizationExamples.app */;
@@ -129,9 +123,6 @@
 			);
 			dependencies = (
 				A7F55DC52EC14C8F00B9A343 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A7F55DC62EC14C8F00B9A343 /* DataVisualizationExamplesTests */,
 			);
 			name = DataVisualizationExamplesTests;
 			packageProductDependencies = (
@@ -152,9 +143,6 @@
 			);
 			dependencies = (
 				A7F55DCF2EC14C8F00B9A343 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				A7F55DD02EC14C8F00B9A343 /* DataVisualizationExamplesUITests */,
 			);
 			name = DataVisualizationExamplesUITests;
 			packageProductDependencies = (
@@ -195,6 +183,9 @@
 			);
 			mainGroup = A7F55DAD2EC14C8E00B9A343;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A79128642EC1502F00009717 /* XCLocalSwiftPackageReference "../../DataVisualizations" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A7F55DB72EC14C8E00B9A343 /* Products */;
 			projectDirPath = "";
@@ -578,6 +569,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		A79128642EC1502F00009717 /* XCLocalSwiftPackageReference "../../DataVisualizations" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../DataVisualizations;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A79128652EC1502F00009717 /* DataVisualizations */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DataVisualizations;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A7F55DAE2EC14C8E00B9A343 /* Project object */;
 }

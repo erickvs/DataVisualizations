@@ -1,23 +1,28 @@
 import SwiftUI
 
 public struct SpiderWebChartView: View {
-    let data: [Double]
-    let categories: [String]
+    let data: [SpiderChartDataPoint]
     let divisions: Int
     let gridColor: Color
     let plotFillColor: Color
     let plotStrokeColor: Color
 
+    // Computed properties
+    private var categories: [String] {
+        data.map { $0.category }
+    }
+    private var values: [Double] {
+        data.map { $0.value }
+    }
+
     public init(
-        data: [Double],
-        categories: [String],
+        data: [SpiderChartDataPoint],
         divisions: Int = 4,
         gridColor: Color = .gray,
         plotFillColor: Color = .blue,
         plotStrokeColor: Color = .blue
     ) {
         self.data = data
-        self.categories = categories
         self.divisions = divisions
         self.gridColor = gridColor
         self.plotFillColor = plotFillColor
@@ -31,12 +36,12 @@ public struct SpiderWebChartView: View {
                 .stroke(gridColor.opacity(0.5), lineWidth: 1)
 
             // Draw the data plot
-            let plot = RadarChartDataPlot(data: data, numberOfCategories: categories.count)
+            let plot = RadarChartDataPlot(data: values, numberOfCategories: categories.count)
             plot.fill(plotFillColor.opacity(0.6))
                 .overlay(plot.stroke(plotStrokeColor, lineWidth: 2))
 
             // Add category labels (optional, but good for clarity)
-            ForEach(0..<categories.count, id: \.self) { index in
+            ForEach(categories.indices, id: \.self) { index in
                 Text(categories[index])
                     .font(.caption)
                     .offset(labelOffset(for: index))
@@ -59,8 +64,13 @@ public struct SpiderWebChartView: View {
 
 // Example Usage in a ContentView
 #Preview {
-    let sampleData: [Double] = [0.8, 0.6, 0.9, 0.4, 0.7] // Example data
-    let sampleCategories: [String] = ["Strength", "Speed", "Agility", "Stamina", "Flexibility"]
+    let sampleData: [SpiderChartDataPoint] = [
+        .init(category: "Strength", value: 0.8),
+        .init(category: "Speed", value: 0.6),
+        .init(category: "Agility", value: 0.9),
+        .init(category: "Stamina", value: 0.4),
+        .init(category: "Flexibility", value: 0.7)
+    ]
 
-    return SpiderWebChartView(data: sampleData, categories: sampleCategories)
+    return SpiderWebChartView(data: sampleData)
 }
