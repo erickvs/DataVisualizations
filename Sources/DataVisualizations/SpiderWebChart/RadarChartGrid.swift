@@ -6,6 +6,11 @@ struct RadarChartGrid: Shape {
 
     func path(in rect: CGRect) -> Path {
         var path = Path()
+        
+        guard numberOfCategories > 0 else {
+            return path
+        }
+        
         let center = CGPoint(x: rect.width / 2, y: rect.height / 2)
         let radius = min(rect.width, rect.height) / 2
         let angleIncrement = .pi * 2 / CGFloat(numberOfCategories)

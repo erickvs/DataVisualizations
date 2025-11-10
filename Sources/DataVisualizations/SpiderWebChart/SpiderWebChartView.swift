@@ -1,34 +1,25 @@
 import SwiftUI
 
 public struct SpiderWebChartView<Label: View>: View {
-    let data: [SpiderChartDataPoint]
+    @Environment(\.gridColor) var gridColor
+    @Environment(\.gridLineWidth) var gridLineWidth
+    
+    let datasets: [SpiderChartDataSet]
     let divisions: Int
-    let gridColor: Color
-    let plotFillColor: Color
-    let plotStrokeColor: Color
     let labelContent: (String, Int) -> Label
 
     // Computed properties
     private var categories: [String] {
-        data.map { $0.category }
-    }
-    private var values: [Double] {
-        data.map { $0.value }
+        datasets.first?.dataPoints.map { $0.category } ?? []
     }
 
     public init(
-        data: [SpiderChartDataPoint],
+        datasets: [SpiderChartDataSet],
         divisions: Int = 4,
-        gridColor: Color = .gray,
-        plotFillColor: Color = .blue,
-        plotStrokeColor: Color = .blue,
         @ViewBuilder labelContent: @escaping (String, Int) -> Label
     ) {
-        self.data = data
+        self.datasets = datasets
         self.divisions = divisions
-        self.gridColor = gridColor
-        self.plotFillColor = plotFillColor
-        self.plotStrokeColor = plotStrokeColor
         self.labelContent = labelContent
     }
 
@@ -36,12 +27,16 @@ public struct SpiderWebChartView<Label: View>: View {
         ZStack {
             // Draw the grid
             RadarChartGrid(numberOfCategories: categories.count, divisions: divisions)
-                .stroke(gridColor.opacity(0.5), lineWidth: 1)
+                .stroke(gridColor.opacity(0.5), lineWidth: gridLineWidth)
 
-            // Draw the data plot
-            let plot = RadarChartDataPlot(data: values, numberOfCategories: categories.count)
-            plot.fill(plotFillColor.opacity(0.6))
-                .overlay(plot.stroke(plotStrokeColor, lineWidth: 2))
+            // Draw the data plots
+            ForEach(datasets.indices, id: \.self) { index in
+                let dataset = datasets[index]
+                let values = dataset.dataPoints.map { $0.value }
+                let plot = RadarChartDataPlot(data: values, numberOfCategories: categories.count)
+                plot.fill(dataset.fillColor.opacity(0.6))
+                    .overlay(plot.stroke(dataset.strokeColor, lineWidth: 2))
+            }
 
             // Add custom labels
             ForEach(categories.indices, id: \.self) { index in
@@ -67,42 +62,44 @@ public struct SpiderWebChartView<Label: View>: View {
 // Extension for default Text label
 public extension SpiderWebChartView where Label == Text {
     init(
-        data: [SpiderChartDataPoint],
-        divisions: Int = 4,
-        gridColor: Color = .gray,
-        plotFillColor: Color = .blue,
-        plotStrokeColor: Color = .blue
+        datasets: [SpiderChartDataSet],
+        divisions: Int = 4
     ) {
         self.init(
-            data: data,
-            divisions: divisions,
-            gridColor: gridColor,
-            plotFillColor: plotFillColor,
-            plotStrokeColor: plotStrokeColor
+            datasets: datasets,
+            divisions: divisions
         ) { category, _ in
             Text(category)
-                .font(.caption)
         }
     }
 }
 
 // Example Usage in a ContentView
 #Preview {
-    let sampleData: [SpiderChartDataPoint] = [
+    let sampleData1: [SpiderChartDataPoint] = [
         .init(category: "Strength", value: 0.8),
         .init(category: "Speed", value: 0.6),
         .init(category: "Agility", value: 0.9),
         .init(category: "Stamina", value: 0.4),
         .init(category: "Flexibility", value: 0.7)
     ]
+    
+    let sampleData2: [SpiderChartDataPoint] = [
+        .init(category: "Strength", value: 0.5),
+        .init(category: "Speed", value: 0.9),
+        .init(category: "Agility", value: 0.3),
+        .init(category: "Stamina", value: 0.8),
+        .init(category: "Flexibility", value: 0.5)
+    ]
+    
+    let datasets: [SpiderChartDataSet] = [
+        .init(dataPoints: sampleData1, fillColor: .blue, strokeColor: .blue),
+        .init(dataPoints: sampleData2, fillColor: .red, strokeColor: .red)
+    ]
 
     // Example with default labels
-    return SpiderWebChartView(data: sampleData)
-    
-    // Example with custom labels
-//    SpiderWebChartView(data: sampleData) { category, index in
-//        Text(category)
-//            .font(.headline)
-//            .foregroundColor(.red)
-//    }
+    return SpiderWebChartView(datasets: datasets)
+        .gridColor(.green)
+        .gridLineWidth(2.0)
+        .font(.headline)
 }
